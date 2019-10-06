@@ -9,7 +9,6 @@ class Peca
 		this.posI = posI;
 		this.posJ = posJ;
 		this.id = id;
-		//this.emJogo = 1;
 	}	
 }
 
@@ -53,8 +52,7 @@ class Torre extends Peca
 			}
 			
 			else
-			{
-			
+			{		
 				if(movimentoI < 0)
 				{	
 					if(tabuleiro[this.posI - z][j] != 0)
@@ -70,8 +68,6 @@ class Torre extends Peca
 		return true;
 	}
 }
-
-
 
 class Cavalo extends Peca
 {
