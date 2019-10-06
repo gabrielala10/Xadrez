@@ -9,7 +9,7 @@ function init() {
 function select(i,j) {
 	var tabuleiro = document.getElementById('tabuleiro');
 	var obj = tabuleiro.rows[i].cells[j]
-
+	//atualizar_jogo();
 	if (select.obj_clicado === undefined || select.obj_clicado === null) {
 		var peca = jogo.getPeca(i, j);
 
@@ -21,11 +21,29 @@ function select(i,j) {
 		select.peca = peca;
 		obj.style.backgroundColor = "green";
 	} else if (jogo.moverPeca(select.peca, i, j)) {
+		if(jogo.rei_b == 7)
+		{
+			alert("Vitória das peças brancas!");
+			alert("Reiniciar jogo!");
+			reiniciar_jogo();
+		}
+		else
+		{
+			if(jogo.rei_w == 1)
+			{
+				alert("Vitória das peças pretas!");
+				alert("Reiniciar jogo!");
+				reiniciar_jogo();
+			}
+			select.obj_clicado.style.backgroundColor = select.obj_bgcolor;
+			select.obj_clicado = null;
+			atualizar_jogo();
+		}
+	} else {
+		alert("Movimento invalido!");
 		select.obj_clicado.style.backgroundColor = select.obj_bgcolor;
 		select.obj_clicado = null;
 		atualizar_jogo();
-	} else {
-		alert("Movimento invalido!");
 	}
 }
 
@@ -34,7 +52,6 @@ function atualizar_jogo() {
 	jogo.reiniciar();
 	let tabuleiro = document.getElementById('tabuleiro');
 	let tabData = jogo.getTabuleiro();
-	//console.log(tabData);
 
 	for (var i = 0, n = tabuleiro.rows.length; i < n; i++) {
 		for (var j = 0, m = tabuleiro.rows[i].cells.length; j < m; j++) {
@@ -45,7 +62,10 @@ function atualizar_jogo() {
 }
 
 function reiniciar_jogo() {
+	jogo = null;
+	jogo = new JogoXadrez();
 	jogo.reiniciar();
+	atualizar_jogo();
 }
 
 function gerar_tabuleiro() {

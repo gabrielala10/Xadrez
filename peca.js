@@ -20,10 +20,8 @@ class Torre extends Peca
 	}
 
 	mover(tabuleiro, i, j){
-		//console.log(i,this.posI, j, this.posJ);
 		if(j!= this.posJ && i!= this.posI)
 			return false;
-		//console.log(i,this.posI, j, this.posJ);
 		if(tabuleiro[i][j] <=6 && tabuleiro[i][j]!= 0)
 			var tipoPeca = WHITE;
 		else 
@@ -44,10 +42,11 @@ class Torre extends Peca
 		{
 			if(movimentoI === 0)
 			{
-				console.log(i,this.posI, j, this.posJ);
 				if(movimentoJ < 0)
+				{
 					if(tabuleiro[i][this.posJ - z] != 0)
-						return false;
+					return false;
+				}
 				else
 					if(tabuleiro[i][this.posJ + z] != 0)
 						return false;
@@ -55,12 +54,14 @@ class Torre extends Peca
 			
 			else
 			{
-				console.log(i,this.posI, j, this.posJ);
+			
 				if(movimentoI < 0)
+				{	
 					if(tabuleiro[this.posI - z][j] != 0)
 						return false;
+				}
 				else
-					if(tabuleiro[this.posI - z][j] != 0)
+					if(tabuleiro[this.posI + z][j] != 0)
 						return false;
 			}
 		}
@@ -78,26 +79,32 @@ class Cavalo extends Peca
 		super(tipo, posI, posJ, id);
 	}
 	
-	mover(tabuleiro, i, j){
-		var idPeca = getPeca(i,j);
-			
-		if(idPeca <=6 && idPeca!= 0)
+	mover(tabuleiro, i, j){			
+		if(tabuleiro[i][j] <=6 && tabuleiro[i][j]!= 0)
 			var tipoPeca = WHITE;
 		else 
 		{
-			if (idPeca != 0)
+			if (tabuleiro[i][j] > 6)
 				var tipoPeca = BLACK;
 			else
 				var tipoPeca = EMPTY;
 		}
-			
-		if((j != posJ && i!= posI))
+		
+		if(tipoPeca == this.tipo)
 			return false;
-				
-		if (peca.i == i && peca.j == j)
+		
+		var movimentoI = i - this.posI;
+		var movimentoJ = j - this.posJ;
+		
+		if(Math.abs(movimentoI) != 2 && Math.abs(movimentoJ) != 2)
 			return false;
-			
-		rmPeca(posI, posJ);
+		if(Math.abs(movimentoI) == 2 && Math.abs(movimentoJ) != 1)
+			return false;
+		if(Math.abs(movimentoJ) == 2 && Math.abs(movimentoI) != 1)
+			return false;
+		
+		this.posI = i;
+		this.posJ = j;
 		return true;
 	}
 }
@@ -108,6 +115,57 @@ class Bispo extends Peca
 	constructor(tipo, posI, posJ, id){
 		super(tipo, posI, posJ, id);
 	}
+	
+	mover(tabuleiro, i, j)
+	{
+		if(tabuleiro[i][j] <=6 && tabuleiro[i][j]!= 0)
+			var tipoPeca = WHITE;
+		else 
+		{
+			if (tabuleiro[i][j] > 6)
+				var tipoPeca = BLACK;
+			else
+				var tipoPeca = EMPTY;
+		}
+		
+		if(tipoPeca == this.tipo)
+			return false;
+		
+		var movimentoI = i - this.posI;
+		var movimentoJ = j - this.posJ;
+		if(Math.abs(movimentoI)!= Math.abs(movimentoJ))
+			return false;
+		
+		for(var z = 1; z < Math.abs(movimentoI); z++)
+		{
+			if(movimentoI < 0)
+			{
+				if(movimentoJ < 0)
+				{
+					if(tabuleiro[this.posI - z][this.posJ - z] != 0)
+					return false;
+				}
+				else
+					if(tabuleiro[this.posI - z][this.posJ + z] != 0)
+						return false;
+			}
+			
+			else
+			{		
+				if(movimentoJ < 0)
+				{
+					if(tabuleiro[this.posI + z][this.posJ - z] != 0)
+					return false;
+				}
+				else
+					if(tabuleiro[this.posI + z][this.posJ + z] != 0)
+						return false;
+			}
+		}
+		this.posI = i;
+		this.posJ = j;
+		return true;
+	}
 }
 
 
@@ -116,12 +174,118 @@ class Rainha extends Peca
 	constructor(tipo, posI, posJ, id){
 		super(tipo, posI, posJ, id);
 	}
+	
+	mover(tabuleiro, i, j)
+	{
+		if(tabuleiro[i][j] <=6 && tabuleiro[i][j]!= 0)
+			var tipoPeca = WHITE;
+		else 
+		{
+			if (tabuleiro[i][j] > 6)
+				var tipoPeca = BLACK;
+			else
+				var tipoPeca = EMPTY;
+		}
+		
+		if(tipoPeca == this.tipo)
+			return false;
+		
+		var movimentoI = i - this.posI;
+		var movimentoJ = j - this.posJ;
+		
+		if(Math.abs(movimentoI) == Math.abs(movimentoJ))
+		{
+			for(var z = 1; z < Math.abs(movimentoI); z++)
+			{
+				if(movimentoI < 0)
+				{
+					if(movimentoJ < 0)
+					{
+						if(tabuleiro[this.posI - z][this.posJ - z] != 0)
+						return false;
+					}
+					else
+						if(tabuleiro[this.posI - z][this.posJ + z] != 0)
+							return false;
+				}
+				
+				else
+				{		
+					if(movimentoJ < 0)
+					{
+						if(tabuleiro[this.posI + z][this.posJ - z] != 0)
+						return false;
+					}
+					else
+						if(tabuleiro[this.posI + z][this.posJ + z] != 0)
+							return false;
+				}
+			}
+		}
+		else
+		{
+			for(var z = 1; z < Math.abs(movimentoI + movimentoJ); z++)
+			{
+				if(movimentoI === 0)
+				{
+					if(movimentoJ < 0)
+					{
+						if(tabuleiro[i][this.posJ - z] != 0)
+						return false;
+					}
+					else
+						if(tabuleiro[i][this.posJ + z] != 0)
+							return false;
+				}
+				
+				else
+				{
+				
+					if(movimentoI < 0)
+					{	
+						if(tabuleiro[this.posI - z][j] != 0)
+							return false;
+					}
+					else
+						if(tabuleiro[this.posI + z][j] != 0)
+							return false;
+				}
+			}
+		}
+			
+		this.posI = i;
+		this.posJ = j;
+		return true;
+	}
 }
 
 class Rei extends Peca
 {
 	constructor(tipo, posI, posJ, id){
 		super(tipo, posI, posJ, id);
+	}
+	
+	mover(tabuleiro, i, j)
+	{
+		if(Math.abs(this.posJ - j) > 1 || Math.abs(this.posI - i) > 1)
+			return false;
+		
+		if(tabuleiro[i][j] <=6 && tabuleiro[i][j]!= 0)
+			var tipoPeca = WHITE;
+		else 
+		{
+			if (tabuleiro[i][j] > 6)
+				var tipoPeca = BLACK;
+			else
+				var tipoPeca = EMPTY;
+		}
+		
+		if(tipoPeca == this.tipo)
+			return false;
+		
+		this.posI = i;
+		this.posJ = j;
+		return true;
 	}
 }
 
@@ -133,8 +297,10 @@ class Peao extends Peca
 	
 	mover(tabuleiro, i, j)
 	{
-		if(j!= this.posJ && (this.posJ != this.posJ - 1 || this.posJ != this.posJ + 1))
+		if(Math.abs(this.posJ - j) > 1)
 			return false; //se não estiver na coluna original ou na de captura
+		if(Math.abs(this.posJ - j) == 1 && tabuleiro[i][j] == 0)
+			return false;
 		if(this.tipo == WHITE) //pode andar duas casas quando esta na posicao inicial
 		{
 			if(i-this.posI > 2 || i - this.posI < 1)
@@ -170,4 +336,3 @@ class Peao extends Peca
 		return true;
 	}
 }
-

@@ -24,6 +24,8 @@ function JogoXadrez() {
 	var pecas = [];
 	var capturas_b = 0;
 	var capturas_w = 0;
+	this.rei_b = 0;
+	this.rei_w = 0;
 
 
 
@@ -108,6 +110,8 @@ function JogoXadrez() {
 				pecaa.posI = 0;
 				pecaa.posJ = capturas_w + 8;
 				capturas_w++;
+				if(pecaa.id == 7)
+					this.rei_b = 7;
 			}
 			else
 				if(pecaa != null && pecaa.tipo == WHITE)
@@ -115,6 +119,8 @@ function JogoXadrez() {
 					pecaa.posI = 7;
 					pecaa.posJ = capturas_b + 8;
 					capturas_b++;
+					if(pecaa.id == 1)
+						this.rei_w = 1;
 				}
 					
 			tabuleiro.rmPeca(peca.posI, peca.posJ);

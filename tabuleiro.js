@@ -7,7 +7,6 @@ class Tabuleiro
 	addPeca(peca, i, j)
 	{
 		this.tabuleiro[i][j] = peca.id;
-		//console.log(i);
 	}
 	
 	rmPeca(i, j)
