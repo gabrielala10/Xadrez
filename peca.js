@@ -9,6 +9,7 @@ class Peca
 		this.posI = posI;
 		this.posJ = posJ;
 		this.id = id;
+		//this.emJogo = 1;
 	}	
 }
 
@@ -18,24 +19,53 @@ class Torre extends Peca
 		super(tipo, posI, posJ, id);
 	}
 
-	mover(peca, i, j){
-		var idPeca = getPeca(peca,i,j);
-			
-		if(idPeca.id <=6 && idPeca.id!= 0)
+	mover(tabuleiro, i, j){
+		//console.log(i,this.posI, j, this.posJ);
+		if(j!= this.posJ && i!= this.posI)
+			return false;
+		//console.log(i,this.posI, j, this.posJ);
+		if(tabuleiro[i][j] <=6 && tabuleiro[i][j]!= 0)
 			var tipoPeca = WHITE;
 		else 
 		{
-			if (idPeca.id != 0)
+			if (tabuleiro[i][j] > 6)
 				var tipoPeca = BLACK;
 			else
 				var tipoPeca = EMPTY;
 		}
 		
-		if(tipoPeca == EMPTY)
-		{	
-			rmPeca(this.posI, this.posJ);
-			addPeca(Torre, i, j);
+		if(tipoPeca == this.tipo)
+			return false;
+		
+		var movimentoI = i - this.posI;
+		var movimentoJ = j - this.posJ;
+		
+		for(var z = 1; z < Math.abs(movimentoI + movimentoJ); z++)
+		{
+			if(movimentoI === 0)
+			{
+				console.log(i,this.posI, j, this.posJ);
+				if(movimentoJ < 0)
+					if(tabuleiro[i][this.posJ - z] != 0)
+						return false;
+				else
+					if(tabuleiro[i][this.posJ + z] != 0)
+						return false;
+			}
+			
+			else
+			{
+				console.log(i,this.posI, j, this.posJ);
+				if(movimentoI < 0)
+					if(tabuleiro[this.posI - z][j] != 0)
+						return false;
+				else
+					if(tabuleiro[this.posI - z][j] != 0)
+						return false;
+			}
 		}
+		this.posI = i;
+		this.posJ = j;
 		return true;
 	}
 }
@@ -48,7 +78,7 @@ class Cavalo extends Peca
 		super(tipo, posI, posJ, id);
 	}
 	
-	mover(i, j){
+	mover(tabuleiro, i, j){
 		var idPeca = getPeca(i,j);
 			
 		if(idPeca <=6 && idPeca!= 0)
@@ -99,6 +129,45 @@ class Peao extends Peca
 {
 	constructor(tipo, posI, posJ, id){
 		super(tipo, posI, posJ, id);
+	}
+	
+	mover(tabuleiro, i, j)
+	{
+		if(j!= this.posJ && (this.posJ != this.posJ - 1 || this.posJ != this.posJ + 1))
+			return false; //se não estiver na coluna original ou na de captura
+		if(this.tipo == WHITE) //pode andar duas casas quando esta na posicao inicial
+		{
+			if(i-this.posI > 2 || i - this.posI < 1)
+				return false;
+			if(i-this.posI == 2 && (j != this.posJ || this.posI != 1|| tabuleiro[this.posI+1][this.posJ] != 0))
+				return false;
+		}
+		else
+		{
+			if(this.posI - i> 2 || this.posI - i < 1)
+				return false;
+			if(this.posI - i == 2 && (j != this.posJ || this.posI != 6 || tabuleiro[this.posI-1][this.posJ] != 0))
+				return false;
+		}
+		if(this.posJ == j && tabuleiro[i][j] != 0)//tem peca na proxima casa
+			return false;
+		
+		if(tabuleiro[i][j] <=6 && tabuleiro[i][j]!= 0)
+			var tipoPeca = WHITE;
+		else 
+		{
+			if (tabuleiro[i][j] > 6)
+				var tipoPeca = BLACK;
+			else
+				var tipoPeca = EMPTY;
+		}
+		
+		if(tipoPeca == this.tipo)
+			return false;
+		
+		this.posI = i;
+		this.posJ = j;
+		return true;
 	}
 }
 

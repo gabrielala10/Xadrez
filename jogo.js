@@ -22,6 +22,8 @@ function JogoXadrez() {
 	
 	var tabuleiro = new Tabuleiro([]);
 	var pecas = [];
+	var capturas_b = 0;
+	var capturas_w = 0;
 
 
 
@@ -84,6 +86,7 @@ function JogoXadrez() {
 	// Não é necessário se preocupar com a existência de outra peça. Caso a posição final da peça esteja ocupada por outra, a peça deverá ser substituída pela nova.
 	// Sempre que esse método for executado com sucesso (retornando true) o turno deve ser atualizado, passando o controle para o outro jogador. Obs: não é permitido que o usuário mova uma peça de outro jogador.
 	this.moverPeca = function(peca, i, j) {
+		
 		// Não pode mover uma peça para fora do tabuleiro.
 		if (i > 7 || i < 0 || j > 7 || j < 0)
 			return false;
@@ -91,9 +94,33 @@ function JogoXadrez() {
 		// Não pode mover uma peça para o mesmo lugar.
 		if (peca.posI == i && peca.posJ == j)
 			return false;
-
-		// Esse é um comportamento de exemplo.
-		peca.mover(tabuleiro.tabuleiro,i,j);
-		return true;
+		
+		if(tabuleiro.tabuleiro[i][j]!=0)
+			var pecaa = tabuleiro.getPeca(pecas,i,j);
+		else
+			var pecaa = null;
+		
+		
+		if(peca.mover(tabuleiro.tabuleiro,i,j))
+		{	
+			if(pecaa != null && pecaa.tipo == BLACK)
+			{
+				pecaa.posI = 0;
+				pecaa.posJ = capturas_w + 8;
+				capturas_w++;
+			}
+			else
+				if(pecaa != null && pecaa.tipo == WHITE)
+				{
+					pecaa.posI = 7;
+					pecaa.posJ = capturas_b + 8;
+					capturas_b++;
+				}
+					
+			tabuleiro.rmPeca(peca.posI, peca.posJ);
+			tabuleiro.addPeca(peca, i, j);
+			return true;
+		}
+		return false;
 	}
 }

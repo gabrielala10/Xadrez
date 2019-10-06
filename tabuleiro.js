@@ -18,7 +18,7 @@ class Tabuleiro
 	getPeca(peca, i, j)
 	{
 		for(var z=0;z<32;z++)
-			if(peca[z].id == this.tabuleiro[i][j])
+			if(peca[z].id == this.tabuleiro[i][j] && peca[z].posI == i && peca[z].posJ == j)
 				return peca[z];
 		return null;
 	}
